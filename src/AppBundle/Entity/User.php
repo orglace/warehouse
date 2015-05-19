@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\ProductOrder;
+use AppBundle\Entity\PurchaseOrder;
 
 /**
  * User
@@ -59,7 +59,7 @@ class User
     private $isActive;
 
     /**
-     * @ORM\OneToMany(targetEntity="ProductOrder", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="PurchaseOrder", mappedBy="user")
      **/
     private $orders;
 
@@ -221,7 +221,7 @@ class User
      * @param \AppBundle\Entity\ProductOrder $orders
      * @return User
      */
-    public function addOrder(ProductOrder $orders)
+    public function addOrder(PurchaseOrder $orders)
     {
         $this->orders[] = $orders;
 
@@ -233,8 +233,12 @@ class User
      *
      * @param \AppBundle\Entity\ProductOrder $orders
      */
-    public function removeOrder(ProductOrder $orders)
+    public function removeOrder(PurchaseOrder $orders)
     {
         $this->orders->removeElement($orders);
+    }
+    
+    public function __toString() {
+        return $this->getUsername();
     }
 }

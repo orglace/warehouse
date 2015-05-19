@@ -95,4 +95,27 @@ class Type
     {
         return $this->productBins;
     }
+
+    /**
+     * Add productBins
+     *
+     * @param \AppBundle\Entity\ProductBin $productBins
+     * @return Type
+     */
+    public function addProductBin(ProductBin $productBins)
+    {
+        $this->productBins[] = $productBins;
+
+        return $this;
+    }
+
+    /**
+     * Remove productBins
+     *
+     * @param \AppBundle\Entity\ProductBin $productBins
+     */
+    public function removeProductBin(ProductBin $productBins)
+    {
+        $this->productBins->removeElement($productBins);
+    }
 }

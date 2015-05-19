@@ -8,6 +8,8 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\ProductBin;
+
 /**
  * Description of Map
  *
@@ -19,7 +21,7 @@ class Map {
     private $intHeight;
     private $arrWarehouse;
     
-    public function __construct($arrBinNames, $intBinAmount) {
+    /*public function __construct($arrBinNames, $intBinAmount) {
         
         $intBinNamesCount = count($arrBinNames);
         $this->intWidth = $intBinNamesCount + floor($intBinNamesCount/2) + $intBinNamesCount%2 + 1;
@@ -38,8 +40,25 @@ class Map {
                     $this->arrWarehouse[$x][$y+1] = $arrBinNames[$i+1].$x;
             }
         }
-    }
+    }*/
     
+    function __construct($intWidth, $intHeight, $arrProductBin) {
+        $this->intWidth = $intWidth;
+        $this->intHeight = $intHeight;
+
+        for ($x = 0; $x < $this->intHeight; $x++) {
+            for ($y = 0; $y < $this->intWidth; $y++) 
+                $this->arrWarehouse[$x][$y] = ' ';
+        }
+        
+        foreach ($arrProductBin as $objProductBin) {
+            
+            $objFromJson = json_decode($objProductBin->getLocation());
+            $this->arrWarehouse[$objFromJson->{'x'}][$objFromJson->{'y'}] = $objProductBin->getName();
+        }
+    }
+
+ 
     public function getIntWidth() {
         return $this->intWidth;
     }

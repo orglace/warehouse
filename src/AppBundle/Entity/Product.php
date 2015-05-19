@@ -4,12 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\ProductBin;
+use AppBundle\Entity\ProductOrder;
 
 /**
  * Product
  *
  * @ORM\Table()
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ProductRepository")
  */
 class Product
 {
@@ -21,6 +23,13 @@ class Product
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
 
     /**
      * @var integer
@@ -41,6 +50,11 @@ class Product
      * @ORM\JoinColumn(name="bin_id", referencedColumnName="id")
      **/
     private $bin;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="ProductOrder", mappedBy="product")
+     **/
+    private $productOrders;
 
     /**
      * Get id
@@ -50,6 +64,29 @@ class Product
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Product
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -142,5 +179,49 @@ class Product
     public function getOrders()
     {
         return $this->orders;
+    }   
+    
+    public function __toString() {
+        return $this->getName();
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->productOrders = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add productOrders
+     *
+     * @param \AppBundle\Entity\ProductOrder $productOrders
+     * @return Product
+     */
+    public function addProductOrder(\AppBundle\Entity\ProductOrder $productOrders)
+    {
+        $this->productOrders[] = $productOrders;
+
+        return $this;
+    }
+
+    /**
+     * Remove productOrders
+     *
+     * @param \AppBundle\Entity\ProductOrder $productOrders
+     */
+    public function removeProductOrder(\AppBundle\Entity\ProductOrder $productOrders)
+    {
+        $this->productOrders->removeElement($productOrders);
+    }
+
+    /**
+     * Get productOrders
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProductOrders()
+    {
+        return $this->productOrders;
     }
 }

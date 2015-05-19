@@ -3,9 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Product;
-use AppBundle\Entity\User;
+use AppBundle\Entity\PurchaseOrder;
 
 /**
  * ProductOrder
@@ -25,31 +24,24 @@ class ProductOrder
     private $id;
 
     /**
-     * @var \DateTime
+     * @ORM\ManyToOne(targetEntity="Product", inversedBy="$productOrders")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     **/
+    private $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="PurchaseOrder", inversedBy="$productOrders")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     **/
+    private $purchaseOrder;
+
+    /**
+     * @var integer
      *
-     * @ORM\Column(name="date", type="datetimetz")
+     * @ORM\Column(name="quantity", type="integer")
      */
-    private $date;
+    private $quantity;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="orders")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     **/
-    private $user;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Product")
-     * @ORM\JoinTable(name="orders_products",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $products;
-
-
-    public function __construct() {
-        $this->products = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -62,71 +54,71 @@ class ProductOrder
     }
 
     /**
-     * Set date
+     * Set product
      *
-     * @param \DateTime $date
+     * @param string $product
      * @return ProductOrder
      */
-    public function setDate($date)
+    public function setProduct($product)
     {
-        $this->date = $date;
+        $this->product = $product;
 
         return $this;
     }
 
     /**
-     * Get date
-     *
-     * @return \DateTime 
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * Set user
-     *
-     * @param string $user
-     * @return ProductOrder
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
+     * Get product
      *
      * @return string 
      */
-    public function getUser()
+    public function getProduct()
     {
-        return $this->user;
+        return $this->product;
     }
 
     /**
-     * Set products
+     * Set purchaseOrder
      *
-     * @param string $products
+     * @param string $purchaseOrder
      * @return ProductOrder
      */
-    public function setProducts($products)
+    public function setPurchaseOrder($purchaseOrder)
     {
-        $this->products = $products;
+        $this->purchaseOrder = $purchaseOrder;
 
         return $this;
     }
 
     /**
-     * Get products
+     * Get purchaseOrder
      *
      * @return string 
      */
-    public function getProducts()
+    public function getPurchaseOrder()
     {
-        return $this->products;
+        return $this->purchaseOrder;
+    }
+
+    /**
+     * Set quantity
+     *
+     * @param integer $quantity
+     * @return ProductOrder
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity
+     *
+     * @return integer 
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 }

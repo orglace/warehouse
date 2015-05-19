@@ -11,7 +11,6 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Type;
 
 /**
@@ -23,9 +22,7 @@ class LoadTypeData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager) {
         
-        $arrType = new ArrayCollection();
-        
-        for ($i = 0; $i < 60; $i++) {
+        for ($i = 1; $i <= 60; $i++) {
             $objType = new Type();
             $objType->setName("Type ".$i);
             
@@ -33,8 +30,6 @@ class LoadTypeData extends AbstractFixture implements OrderedFixtureInterface
             $arrType[] = $objType;
         }
         $manager->flush();
-        
-        $this->addReference('warehouse-types', $arrType);
     }
     
     public function getOrder() {

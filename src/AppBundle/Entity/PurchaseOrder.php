@@ -6,14 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\User;
+use AppBundle\Entity\ProductOrder;
 
 /**
  * ProductOrder
  *
  * @ORM\Table()
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
-class ProductOrder
+class PurchaseOrder
 {
     /**
      * @var integer
@@ -38,17 +40,14 @@ class ProductOrder
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Product")
-     * @ORM\JoinTable(name="orders_products",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="ProductOrder", mappedBy="purchaseOrder")
      **/
-    private $products;
+    private $productOrders;
 
 
     public function __construct() {
         $this->products = new ArrayCollection();
+        
     }
 
     /**
@@ -151,5 +150,13 @@ class ProductOrder
     public function removeProduct(Product $products)
     {
         $this->products->removeElement($products);
+    }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->date = new \DateTime();
     }
 }

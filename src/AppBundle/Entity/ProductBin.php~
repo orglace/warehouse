@@ -4,6 +4,9 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\Entity\Product;
+use AppBundle\Entity\Type;
+use AppBundle\Entity\Rack;
 
 /**
  * ProductBin
@@ -157,5 +160,38 @@ class ProductBin
     public function getRack()
     {
         return $this->rack;
+    }
+
+    /**
+     * Add products
+     *
+     * @param \AppBundle\Entity\Product $products
+     * @return ProductBin
+     */
+    public function addProduct(Product $products)
+    {
+        $this->products[] = $products;
+
+        return $this;
+    }
+
+    /**
+     * Remove products
+     *
+     * @param \AppBundle\Entity\Product $products
+     */
+    public function removeProduct(Product $products)
+    {
+        $this->products->removeElement($products);
+    }
+
+    /**
+     * Get products
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProducts()
+    {
+        return $this->products;
     }
 }

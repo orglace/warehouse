@@ -69,8 +69,18 @@ class WarehouseCommand extends ContainerAwareCommand{
         $this->printWarehouse($output);
         
         $output->writeln("The better distance is: ".$distance);*/
-        $objOriginalMap = new Map($this->arrBinNames, $this->intBinAmount);
-        $arrBinNames = array("A1", "B4", "E10");
+        
+        $objEM = $this->getContainer()->get('doctrine')->getManager();
+        $arrProductBin = $objEM->getRepository('AppBundle:ProductBin')->findAll();
+        $arrRack = $objEM->getRepository('AppBundle:Rack')->findAll();
+        
+        $intBinNamesCount = count($arrRack)*2;
+        $intBinAmount = count($arrRack[0]->getProductBins())/2;
+        $intWidth = $intBinNamesCount + floor($intBinNamesCount/2) + $intBinNamesCount%2 + 1;
+        $intHeight = $intBinAmount + 2;
+        
+        $objOriginalMap = new Map($intWidth, $intHeight, $arrProductBin);
+        $arrBinNames = array("F6", "D7", "B10");
         $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 1, 0), $arrBinNames);
         
         /*$this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
@@ -86,6 +96,26 @@ class WarehouseCommand extends ContainerAwareCommand{
         }
         
         $output->writeln("The better route has a distance of: ".$objOptimumRoute->getDistance());
+        
+        $objPurchase = array(14 => 10, 25 => 2);
+        $jsonPurchase = json_encode($objPurchase);
+        
+        dump($jsonPurchase);
+        
+        $objPurchaseFromJson = json_decode($jsonPurchase, true);
+        $objPurchaseFromJson[20] = 30;
+        dump($objPurchaseFromJson);
+        
+        foreach ($objPurchaseFromJson as $key => $value) {
+            $output->writeln($key." => ".$value);
+        }
+        
+        $value = null;
+        $output->writeln(isset($value));
+        //$output->writeln($objPositionFromJson->{'x'}[1]);
+        //$output->writeln("The x value is: ".$objPositionFromJson.getX());
+        $intValue = intval("25");
+        dump($intValue);
     }
     
     private function updateMap(Map $objMap, Path $objPath) {

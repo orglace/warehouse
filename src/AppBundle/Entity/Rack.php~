@@ -123,4 +123,27 @@ class Rack
     {
         return $this->productBins;
     }
+
+    /**
+     * Add productBins
+     *
+     * @param \AppBundle\Entity\ProductBin $productBins
+     * @return Rack
+     */
+    public function addProductBin(\AppBundle\Entity\ProductBin $productBins)
+    {
+        $this->productBins[] = $productBins;
+
+        return $this;
+    }
+
+    /**
+     * Remove productBins
+     *
+     * @param \AppBundle\Entity\ProductBin $productBins
+     */
+    public function removeProductBin(\AppBundle\Entity\ProductBin $productBins)
+    {
+        $this->productBins->removeElement($productBins);
+    }
 }
