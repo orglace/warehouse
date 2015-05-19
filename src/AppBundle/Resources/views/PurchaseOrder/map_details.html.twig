@@ -1,0 +1,17 @@
+
+<table border="1" class="records_list">
+    <thead>
+
+    </thead>
+    <tbody>
+    {% for row in arrWarehouse %}
+        <tr>
+          {% for cell in row %}
+            <td height="25px" width="25px">{{ cell }}</td>                
+          {% endfor %}
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+    

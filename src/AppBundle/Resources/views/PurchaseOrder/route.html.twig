@@ -1,0 +1,12 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Pick Sheet</h1>
+    <h2>Optimum Route</h2>
+    
+    {% for arrWarehouse in arrWarehouseCollection %}
+           {{ include('AppBundle:PurchaseOrder:map_details.html.twig', { 'arrWarehouse': arrWarehouse }) }}
+           <br>
+           <br>
+    {% endfor %}
+{% endblock %}
