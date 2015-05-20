@@ -1,13 +1,245 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <title>{% block title %}Warehouse!{% endblock %}</title>    
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Favicon -->
+     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+    <!-- Web Fonts -->
+    <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
+
+    <!-- CSS Global Compulsory -->
+        
+    {% block stylesheets %}
+    {% stylesheets 
+        'bundles/app/assets/plugins/bootstrap/css/bootstrap.min.css'
+        'bundles/app/assets/css/style.css'
+        'bundles/app/assets/css/headers/header-default.css'
+        'bundles/app/assets/css/footers/footer-v1.css'
+        'bundles/app/assets/plugins/animate.css'
+        'bundles/app/assets/plugins/line-icons/line-icons.css'
+        'bundles/app/assets/plugins/font-awesome/css/font-awesome.min.css'
+        'bundles/app/assets/css/theme-colors/default.css'
+        'bundles/app/assets/css/custom.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% endblock %}
+       
     </head>
+    
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+
+    <div class="wrapper">
+        <!--=== Header ===-->    
+        <div class="header">
+            <div class="container">
+                <!-- Logo -->
+                <a class="logo" href="#">
+                    {% image '@AppBundle/Resources/public/assets/img/logo1-default.png' %}
+                        <img src="{{ asset_url }}" alt="Warehouse" />
+                    {% endimage %}
+                </a>
+            
+            <!-- End Logo -->
+            
+            <!-- Topbar -->
+            <div class="topbar">
+                <ul class="loginbar pull-right">
+                    <li class="topbar-devider"></li>   
+                    <li><a href="page_login.html">Login</a></li> 
+                    <li class="topbar-devider"></li>   
+                    <li><a href="#">&nbsp;</a></li>   
+                </ul>
+            </div>
+            <!-- End Topbar -->
+
+            <!-- Toggle get grouped for better mobile display -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="fa fa-bars"></span>
+            </button>
+            <!-- End Toggle -->
+        </div><!--/end container-->
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
+            <div class="container">
+                <ul class="nav navbar-nav" style="float:left; margin-left: 200px;">
+                    <!-- Home -->
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                            Home
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.html">Option 1: Default Page</a></li>
+
+                            <!-- One Page -->
+                            <li class="dropdown-submenu">
+                                <a href="javascript:void(0);">Option 2: One Page</a>
+                                <ul class="dropdown-menu">
+                                    <li><a target="_blank" href="One-Page/index.html">- One Page Template</a></li>                                
+                                    <li><a target="_blank" href="One-Page/dark-page-example.html">- One Page Dark Theme</a></li>                                
+                                </ul>                                
+                            </li>
+                            <!-- End One Page -->
+                        </ul>
+                    </li>
+                    <!-- End Home -->
+
+                    <!-- Pages -->                        
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                            Pages
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- About Pages -->
+                            <li class="dropdown-submenu">
+                                <a href="javascript:void(0);">About Pages</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="page_about2.html">About Us </a></li>
+                                    <li><a href="page_about3.html">About Us 1</a></li>
+                                    <li><a href="page_about1.html">About Us 2</a></li>
+                                    <li><a href="page_about.html">About Us 3</a></li>
+                                    <li><a href="page_about_me.html">About Me </a></li>
+                                    <li><a href="page_about_me1.html">About Me 1</a></li>
+                                    <li><a href="page_about_me2.html">About Me 2</a></li>
+                                    <li><a href="page_about_our_team.html">About Our Team</a></li>
+                                    <li><a href="page_about_our_team1.html">About Our Team 1</a></li>
+                                    <li><a href="page_about_our_team2.html">About Our Team 2</a></li>
+                                </ul>                                
+                            </li>
+                            <!-- End About Pages -->
+                            
+                        </ul>
+                    </li>
+                    <!-- End Pages -->
+                </ul>
+            </div><!--/end container-->
+        </div><!--/navbar-collapse-->
+    </div>
+    <!--=== End Header ===-->
+
+    <!--=== Breadcrumbs ===-->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h1 class="pull-left">{% block titlebar %}Blank Page{% endblock %}</h1>
+        </div><!--/container-->
+    </div><!--/breadcrumbs-->
+    <!--=== End Breadcrumbs ===-->
+
+    <!--=== Content ===-->
+    <div class="container content height-500">
+        <!-- Write Your HTML Codes Here -->
+       
+    {% block body %}{% endblock %}
+        
+   
+    </div>
+    <!--=== End Content ===-->
+
+    <!--=== Footer Version 1 ===-->
+    <div class="footer-v1">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <!-- About -->
+                    <div class="col-md-3 md-margin-bottom-40">
+                        <a href="index.html">
+                            {% image '@AppBundle/Resources/public/assets/img/logo2-default.png' %}
+                                <img id="logo-footer" class="footer-logo" src="{{ asset_url }}" alt="Warehouse" />
+                            {% endimage %}
+                        </a>
+                        <p>This is a Warehouse application manager.</p>    
+                    </div><!--/col-md-3-->
+                    <!-- End About -->
+
+                    <!-- Latest -->
+                    <div class="col-md-3 md-margin-bottom-40">
+                        <div class="posts">
+                            <div class="headline"><h2>Warehouse</h2></div>
+                            <ul class="list-unstyled latest-list">
+                                <li>
+                                    <a href="#">Incredible content</a>
+                                    <small>May 8, 2014</small>
+                                </li>
+                                <li>
+                                    <a href="#">Best shoots</a>
+                                    <small>June 23, 2014</small>
+                                </li>
+                                <li>
+                                    <a href="#">New Terms and Conditions</a>
+                                    <small>September 15, 2014</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div><!--/col-md-3-->  
+                    <!-- End Latest --> 
+                    
+                    <!-- Address -->
+                    <div class="col-md-3 map-img md-margin-bottom-40">
+                        <div class="headline"><h2>Contact Us</h2></div>                         
+                        <address class="md-margin-bottom-40">
+                            25, Lorem Lis Street, Orange <br />
+                            Orlando, FL <br />
+                            Phone: 800 123 3456 <br />
+                            Email: <a href="mailto:orglace@gmail.com" class="">orglace@gmail.com</a>
+                        </address>
+                    </div><!--/col-md-3-->
+                    <!-- End Address -->
+                </div>
+            </div> 
+        </div><!--/footer-->
+
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">                     
+                        <p>
+                            2015 &copy; All Rights Reserved.
+                           
+                        </p>
+                    </div>
+
+                    <!-- Social Links -->
+                    
+                    </div>
+                    <!-- End Social Links -->
+                </div>
+            </div> 
+        </div><!--/copyright-->
+    </div>     
+    <!--=== End Footer Version 1 ===-->
+</div>
+{% block javascripts %}
+{% javascripts
+    '@AppBundle/Resources/public/assets/plugins/jquery/jquery.min.js'
+    '@AppBundle/Resources/public/assets/plugins/jquery/jquery-migrate.min.js'
+    '@AppBundle/Resources/public/assets/plugins/bootstrap/js/bootstrap.min.js'
+    '@AppBundle/Resources/public/assets/plugins/back-to-top.js'
+    '@AppBundle/Resources/public/assets/plugins/smoothScroll.js'
+    '@AppBundle/Resources/public/assets/js/custom.js'
+    '@AppBundle/Resources/public/assets/js/app.js' %}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+      	App.init();
+        });
+</script>
+{% endblock %}
+
+<!--[if lt IE 9]>
+    <script src="assets/plugins/respond.js"></script>
+    <script src="assets/plugins/html5shiv.js"></script>
+    <script src="assets/plugins/placeholder-IE-fixes.js"></script>
+<![endif]-->
+
+</body>
 </html>

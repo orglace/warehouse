@@ -9,6 +9,7 @@
 namespace AppBundle\Model;
 
 use AppBundle\Entity\ProductBin;
+use AppBundle\Model\Cell;
 
 /**
  * Description of Map
@@ -48,7 +49,7 @@ class Map {
 
         for ($x = 0; $x < $this->intHeight; $x++) {
             for ($y = 0; $y < $this->intWidth; $y++) 
-                $this->arrWarehouse[$x][$y] = ' ';
+                $this->arrWarehouse[$x][$y] = " ";
         }
         
         foreach ($arrProductBin as $objProductBin) {

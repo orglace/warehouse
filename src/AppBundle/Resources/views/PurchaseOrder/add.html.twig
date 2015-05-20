@@ -1,76 +1,94 @@
 {% extends '::base.html.twig' %}
 
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block titlebar -%}Order{% endblock %}
 
 {% block body -%}
-
-<div class="col-md-10">
-            
-    <div class="panel-body">
-        <div class="profile-blog blog-border">
-            <h2 class="panel-title heading-sm pull-left" style="padding:0 0 10px 10px;font-weight: bold;">Add Product</h2>
+    
+    <div class="row content-boxes-v2 margin-bottom-30">
+        <div class="col-md-7 md-margin-bottom-30"> 
             {% for flashMessage in app.session.flashbag.get('notice') %}
-                <div class="flash-notice">
-                    {{ flashMessage }}
+                <div class="alert alert-danger fade in" style="padding: 10px;">
+                    <strong>Oh snap!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
-            {{ form_start(form) }}
-            <div class="row">
-                <div class="col-xs-12 col-sm-10">
-                    <div class="col-sm-12">
-                            <div class="row">
-                                <div class="form-group col-xs-12 col-sm-6">
-{# 									{{ form_label(form.list, 'mailchimp.api_key'|trans() ~ ' * ') }}#}
-                                    {{ form_errors(form.product) }}
-                                    {{ form_label(form.product) }}
-                                    {{ form_widget(form.product) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-xs-12 col-sm-6">
-{# 									{{ form_label(form.list, 'mailchimp.api_key'|trans() ~ ' * ') }}#}
-                                    {{ form_errors(form.quantity) }}
-                                    {{ form_label(form.quantity) }}
-                                    {{ form_widget(form.quantity) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-xs-12 col-sm-6 " style="margin-bottom: 0;">
-                                    {{ form_widget(form.add, {'disabled': addDisabled, 'attr': {'class': 'btn-u btn-u-green'}, 'icon': 'glyphicon glyphicon-check'}) }}
-                                </div>
-                            </div>
-                    </div>
+            
+            <div class="panel panel-green margin-bottom-40" style="border-color: #72c02c;">
+                <div class="panel-heading" style="background: #72c02c;">
+                    <h3 class="panel-title"><i class="fa fa-tasks"></i> Add a product</h3>
+                </div>
+                <div class="panel-body">
+                    {{ form_start(form, {'attr': {'class': 'form-inline', 'role': 'form'},}) }}
+                        <div class="form-group">
+                            {{ form_errors(form.product) }}
+                            {{ form_widget(form.product) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_errors(form.quantity) }}
+                            {{ form_widget(form.quantity) }}
+                        </div>
+                        {{ form_widget(form.add, {'disabled': addDisabled, 'attr': {'class': 'btn-u btn-u-default'},}) }}
+                        
+                    {{ form_end(form) }}
                 </div>
             </div>
-            {{ form_end(form) }}  
+            
+            <div class="panel panel-sea margin-bottom-40" style="border-color: #72c02c;">
+                <div class="panel-heading" style="background: #72c02c;">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-list"></i> Order Items</h3>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in arrProduct %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.description }}</td>
+                            <td>{{ arrQuantity[loop.index0] }}</td>
+                            <td> <a class="btn btn-danger btn-xs" href="{{ path('order_product_delete', { 'id': product.id }) }}"><i class="fa fa-trash-o"></i> delete</a> </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a class="btn-u" href="{{ path('order_product_buy') }}"><i class="fa fa-shopping-cart"></i> Buy</a>
+            </div>
         </div>
         
-        <h1>Order Items</h1>
-
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Quantity</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for product in arrProduct %}
-            <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ arrQuantity[loop.index0] }}</td>
-                <td> <a href="{{ path('order_product_delete', { 'id': product.id }) }}">delete</a> </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        <a href="{{ path('order_product_buy') }}">Buy</a>
+        <div class="col-md-4 md-margin-bottom-30">
+            
+            <div class="shadow-wrapper margin-bottom-60">
+                <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+                    <h2 class="heading-sm">
+                        <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-lightbulb-o"></i>
+                        <span>Information</span>
+                    </h2>
+                    <ul>
+                        <li>
+                            You have to add 5 products to order mandatory.
+                        </li>
+                        <li>
+                            If you want to test the stock level validation add a quantity more than 100.
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+        
     </div>
+    
 </div>
 
 {% endblock %}

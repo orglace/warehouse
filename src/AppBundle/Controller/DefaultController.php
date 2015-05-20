@@ -9,9 +9,17 @@ class DefaultController extends Controller
 {
     /**
      * @Route("/app/example", name="homepage")
-     */
+     
     public function indexAction()
     {
         return $this->render('default/index.html.twig');
+    }*/
+    
+    /**
+     * @Route("/", name="homepage")
+     */
+    public function indexAction()
+    {
+        return $this->render('AppBundle:default:home.html.twig');
     }
 }

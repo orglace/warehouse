@@ -1,12 +1,10 @@
 {% extends '::base.html.twig' %}
-
+{% block titlebar -%}Pick Sheet [{{strPackingStationName}}] {% endblock %}
 {% block body -%}
-    <h1>Pick Sheet</h1>
-    <h2>Optimum Route</h2>
-    
+    <h3>Optimum Route (Distance: {{ intTotalDistance }} meters)</h3>
     {% for arrWarehouse in arrWarehouseCollection %}
-           {{ include('AppBundle:PurchaseOrder:map_details.html.twig', { 'arrWarehouse': arrWarehouse }) }}
+           {{ include('AppBundle:PurchaseOrder:map_details.html.twig', { 'arrWarehouse': arrWarehouse, 'objProduct': arrProduct[loop.index0]}) }}
            <br>
            <br>
-    {% endfor %}
+    {% endfor %}    
 {% endblock %}

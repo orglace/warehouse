@@ -6,12 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\User;
+use AppBundle\Entity\ProductOrder;
 
 /**
  * ProductOrder
  *
  * @ORM\Table()
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
 class PurchaseOrder
 {
@@ -38,17 +40,14 @@ class PurchaseOrder
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Product")
-     * @ORM\JoinTable(name="orders_products",
-     *      joinColumns={@ORM\JoinColumn(name="order_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="ProductOrder", mappedBy="purchaseOrder")
      **/
-    private $products;
+    private $productOrders;
 
 
     public function __construct() {
         $this->products = new ArrayCollection();
+        
     }
 
     /**
@@ -108,48 +107,10 @@ class PurchaseOrder
     }
 
     /**
-     * Set products
-     *
-     * @param string $products
-     * @return ProductOrder
+     * @ORM\PrePersist
      */
-    public function setProducts($products)
+    public function setCreatedAtValue()
     {
-        $this->products = $products;
-
-        return $this;
-    }
-
-    /**
-     * Get products
-     *
-     * @return string 
-     */
-    public function getProducts()
-    {
-        return $this->products;
-    }
-
-    /**
-     * Add products
-     *
-     * @param \AppBundle\Entity\Product $products
-     * @return ProductOrder
-     */
-    public function addProduct(Product $products)
-    {
-        $this->products[] = $products;
-
-        return $this;
-    }
-
-    /**
-     * Remove products
-     *
-     * @param \AppBundle\Entity\Product $products
-     */
-    public function removeProduct(Product $products)
-    {
-        $this->products->removeElement($products);
+        $this->date = new \DateTime();
     }
 }

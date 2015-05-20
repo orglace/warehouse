@@ -28,18 +28,7 @@ class Path {
         $this->objCurrentPosition = $objCurrentPosition;
         $this->strBinName = $strBinName;
         $this->arrPosition = array();
-        $this->intDistance = $this->getIntDistance($objMap);
-    }
-
-    public function getObjCurrentPosition() {
-        return $this->objCurrentPosition;
-    }
-
-    public function getStrBinName() {
-        return $this->strBinName;
-    }
-
-    public function getIntDistance(Map $objMap = null) {
+        $this->intDistance = -1;
         
         if ($objMap != null) {
             $arrWarehouse = $objMap->getArrWarehouse();
@@ -58,6 +47,51 @@ class Path {
                 if((isset($arrWarehouse[$x][$y-1]) && $arrWarehouse[$x][$y-1] == $this->strBinName) || (isset($arrWarehouse[$x][$y+1]) && $arrWarehouse[$x][$y+1] == $this->strBinName)) {
                     $this->setArrPosition($objCurrent);
                     $this->intDistance = $objCurrent->getDistance();
+                    //return $this->intDistance;
+                    break;
+                }
+                $arrVisited[$x][$y] = true;
+
+                for ($i = 0; $i < 4; $i++) {
+                    $nx = $arrXScroll[$i] + $x;
+                    $ny = $arrYScroll[$i] + $y;
+
+                    if($nx >= 0 && $nx < $intHeight && $ny >= 0 && $ny < $intWidth && $arrWarehouse[$nx][$ny] == " " && !isset($arrVisited[$nx][$ny])) {
+                        array_push($quePositions, new Position($nx, $ny, $objCurrent->getDistance() + 1));
+                        $this->arrPath[$nx][$ny] = $objCurrent;                   
+                    }
+                }
+            }
+        }
+    }
+
+    public function getObjCurrentPosition() {
+        return $this->objCurrentPosition;
+    }
+
+    public function getStrBinName() {
+        return $this->strBinName;
+    }
+
+    /*public function getIntDistance(Map $objMap = null) {
+        
+        if ($objMap != null) {
+            $arrWarehouse = $objMap->getArrWarehouse();
+            $intWidth = $objMap->getIntWidth();
+            $intHeight = $objMap->getIntHeight();
+            $arrXScroll = array(0, 0, 1, -1);
+            $arrYScroll = array(1, -1, 0, 0);
+            $arrVisited;
+            $quePositions[0] = $this->objCurrentPosition;
+            $this->arrPath[$this->objCurrentPosition->getX()][$this->objCurrentPosition->getY()] = new Position(-1, -1, -1);
+
+            while (count($quePositions) != 0) {
+                $objCurrent = array_shift($quePositions);
+                $x = $objCurrent->getX();
+                $y = $objCurrent->getY();
+                if((isset($arrWarehouse[$x][$y-1]) && $arrWarehouse[$x][$y-1] == $this->strBinName) || (isset($arrWarehouse[$x][$y+1]) && $arrWarehouse[$x][$y+1] == $this->strBinName)) {
+                    $this->setArrPosition($objCurrent);
+                    //$this->intDistance = $objCurrent->getDistance();
                     return $this->intDistance;
                 }
                 $arrVisited[$x][$y] = true;
@@ -76,6 +110,10 @@ class Path {
         }
         
         return $this->intDistance;
+    }*/
+    
+    public function getIntDistance() {
+        return $this->intDistance;
     }
 
     public function getArrPosition() {
@@ -84,7 +122,9 @@ class Path {
     
     public function getLastPosition() {
         $arrValues = array_values($this->getArrPosition());
-        return end($arrValues);
+        $objPosition = end($arrValues);
+        $objPosition->setDistance(0);
+        return $objPosition;
     }
 
     private function setArrPosition($objPosition) {

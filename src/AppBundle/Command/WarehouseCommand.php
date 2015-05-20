@@ -80,8 +80,8 @@ class WarehouseCommand extends ContainerAwareCommand{
         $intHeight = $intBinAmount + 2;
         
         $objOriginalMap = new Map($intWidth, $intHeight, $arrProductBin);
-        $arrBinNames = array("F6", "D7", "B10");
-        $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 1, 0), $arrBinNames);
+        $arrBinNames = array("A1", "B1", "C1", "D1", "E1");
+        $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 7, 0), $arrBinNames);
         
         /*$this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
         
@@ -92,12 +92,12 @@ class WarehouseCommand extends ContainerAwareCommand{
         //$output->writeln("The better distance is: ".$objOptimumRoute->getDistance());
         foreach ($objOptimumRoute->getArrPath() as $objPath) {
             $this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
-            $this->printPath($objPath, $output);
+            $this->printPath($objOriginalMap, $objPath, $output);
         }
         
         $output->writeln("The better route has a distance of: ".$objOptimumRoute->getDistance());
         
-        $objPurchase = array(14 => 10, 25 => 2);
+        /*$objPurchase = array(14 => 10, 25 => 2);
         $jsonPurchase = json_encode($objPurchase);
         
         dump($jsonPurchase);
@@ -115,7 +115,7 @@ class WarehouseCommand extends ContainerAwareCommand{
         //$output->writeln($objPositionFromJson->{'x'}[1]);
         //$output->writeln("The x value is: ".$objPositionFromJson.getX());
         $intValue = intval("25");
-        dump($intValue);
+        dump($intValue);*/
     }
     
     private function updateMap(Map $objMap, Path $objPath) {
@@ -124,7 +124,7 @@ class WarehouseCommand extends ContainerAwareCommand{
         foreach ($objPath->getArrPosition() as $objPosition) {
             $arrNewMap[$objPosition->getX()][$objPosition->getY()] = "*";
         }
-        return $arrNewMap;
+        return array_reverse($arrNewMap);
     }
     
     private function printMap($arrMap, $output) {
@@ -133,11 +133,13 @@ class WarehouseCommand extends ContainerAwareCommand{
         $table->render($output);
     }
     
-    private function printPath(Path $objPath, $output) {
+    private function printPath(Map $objMap, Path $objPath, $output) {
         foreach ($objPath->getArrPosition() as $objPosition) {
             $output->write('['.$objPosition->getX().', '.$objPosition->getY().']'.'=>');
         }
         $output->writeln('');
+        $output->writeln('Path distance: '.  strval(count($objPath->getArrPosition())-1));
+        $output->writeln('Product Bin: '.$objPath->getStrBinName());
     }
     
     private function getOptimumRoute($objMap, $objPosition, $arrBinNames) 

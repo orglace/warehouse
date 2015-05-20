@@ -1,17 +1,43 @@
+<div class="row content-boxes-v2 margin-bottom-30">
+        <div class="col-md-7 md-margin-bottom-30"> 
+                        
+            <table class="table table-bordered">
+               <tbody>
+                    {% for row in arrWarehouse %}
+                        <tr>
+                          {% for cell in row %}
+                              <td height="50px" width="50px" style="padding: 0; text-align: center; vertical-align: middle;">{{ cell }}</td>                
+                          {% endfor %}
+                        </tr>
 
-<table border="1" class="records_list">
-    <thead>
-
-    </thead>
-    <tbody>
-    {% for row in arrWarehouse %}
-        <tr>
-          {% for cell in row %}
-            <td height="25px" width="25px">{{ cell }}</td>                
-          {% endfor %}
-        </tr>
-
-    {% endfor %}
-    </tbody>
-</table>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-md-4 md-margin-bottom-30">
+            
+            <div class="shadow-wrapper margin-bottom-60">
+                <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+                    <h2 class="heading-sm">
+                        <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-lightbulb-o"></i>
+                        <span>Information</span>
+                    </h2>
+                    {% if objProduct.description %}
+                        <ul>
+                            <li> Product Name: {{ objProduct.name }} </li>
+                            <li> Product description: {{ objProduct.description }} </li>
+                            <li> Product bin location: {{ objProduct.bin.name }} </li>
+                        </ul>
+                    {% else %}
+                        <ul>
+                            <li> Returning to Packing Station: {{ objProduct.name }} </li>
+                        </ul>
+                    {% endif %} 
+                    
+                </div>
+            </div>
+        </div>
+        
+</div>
     

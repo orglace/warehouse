@@ -107,56 +107,43 @@ class PurchaseOrder
     }
 
     /**
-     * Set products
-     *
-     * @param string $products
-     * @return ProductOrder
-     */
-    public function setProducts($products)
-    {
-        $this->products = $products;
-
-        return $this;
-    }
-
-    /**
-     * Get products
-     *
-     * @return string 
-     */
-    public function getProducts()
-    {
-        return $this->products;
-    }
-
-    /**
-     * Add products
-     *
-     * @param \AppBundle\Entity\Product $products
-     * @return ProductOrder
-     */
-    public function addProduct(Product $products)
-    {
-        $this->products[] = $products;
-
-        return $this;
-    }
-
-    /**
-     * Remove products
-     *
-     * @param \AppBundle\Entity\Product $products
-     */
-    public function removeProduct(Product $products)
-    {
-        $this->products->removeElement($products);
-    }
-    
-    /**
      * @ORM\PrePersist
      */
     public function setCreatedAtValue()
     {
         $this->date = new \DateTime();
+    }
+
+    /**
+     * Add productOrders
+     *
+     * @param \AppBundle\Entity\ProductOrder $productOrders
+     * @return PurchaseOrder
+     */
+    public function addProductOrder(\AppBundle\Entity\ProductOrder $productOrders)
+    {
+        $this->productOrders[] = $productOrders;
+
+        return $this;
+    }
+
+    /**
+     * Remove productOrders
+     *
+     * @param \AppBundle\Entity\ProductOrder $productOrders
+     */
+    public function removeProductOrder(\AppBundle\Entity\ProductOrder $productOrders)
+    {
+        $this->productOrders->removeElement($productOrders);
+    }
+
+    /**
+     * Get productOrders
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProductOrders()
+    {
+        return $this->productOrders;
     }
 }

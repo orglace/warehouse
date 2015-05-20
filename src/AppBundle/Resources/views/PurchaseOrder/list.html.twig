@@ -1,32 +1,61 @@
 {% extends '::base.html.twig' %}
-
+{% block titlebar -%}Order List{% endblock %}
 {% block body -%}
-    <h1>ProductOrder list</h1>
-
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Date</th>
-                <th>User</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for order in arrPurchaseOrder %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.date | date('Y-m-d')}}</td>
-                <td>{{ order.user }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('order_product_add') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+    
+    <div class="row content-boxes-v2 margin-bottom-30">
+        <div class="col-md-7 md-margin-bottom-30"> 
+                        
+            <div class="panel panel-sea margin-bottom-40" style="border-color: #72c02c;">
+                <div class="panel-heading" style="background: #72c02c;">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-list"></i> Order Items</h3>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in arrPurchaseOrder %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.date | date('Y-m-d')}}</td>
+                            <td>{{ order.user }}</td>
+                            <td><a class="btn btn-u btn-xs" href="{{ path('warehouse_map_route', { 'id': order.id }) }}"><i class="fa fa-magic"></i> Pick Sheet</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <a class="btn-u" href="{{ path('order_product_add') }}"><i class="fa fa-file-text-o"></i> Create new Order</a>
+            </div>
+        </div>
+        
+        <div class="col-md-4 md-margin-bottom-30">
+            
+            <div class="shadow-wrapper margin-bottom-60">
+                <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+                    <h2 class="heading-sm">
+                        <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-lightbulb-o"></i>
+                        <span>Information</span>
+                    </h2>
+                    <ul>
+                        <li>
+                            You have to add 5 products to order mandatory.
+                        </li>
+                        <li>
+                            If you want to test the stock level validation add a quantity more than 100.
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
     {% endblock %}

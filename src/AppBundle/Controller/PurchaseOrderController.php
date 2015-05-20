@@ -19,6 +19,7 @@ use AppBundle\Model\Map;
 use AppBundle\Model\Path;
 use AppBundle\Model\Position;
 use AppBundle\Model\Route as MapRoute;
+use AppBundle\Model\Cell;
 
 /**
  * Description of PurchaseOrderController
@@ -55,26 +56,60 @@ class PurchaseOrderController extends Controller {
     /**
      * Lists all ProductOrder entities.
      *
-     * @Route("/warehouse/route", name="warehouse_map_route")
+     * @Route("/warehouse/{id}/route", name="warehouse_map_route")
      * @Method("GET")
      * @Template()
      */
-    public function routeAction()
+    public function routeAction($id)
     {
         $objEM = $this->getDoctrine()->getManager();
         $objOriginalMap = $this->createMap($objEM);
         //$arrWarehouse = $objOriginalMap->getArrWarehouse();
-        $arrBinNames = array("F6", "D7", "B10");
-        $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 1, 0), $arrBinNames);
+        $arrPurchaseOrder = $objEM->getRepository('AppBundle:PurchaseOrder')->find($id);
+        $arrProductOrder = $arrPurchaseOrder->getProductOrders();
         
-        $arrWarehouseCollection = array();
-                
+        $arrProductId = array();
+        foreach ($arrProductOrder as $objProductOrder) {
+            $arrProductId[] = $objProductOrder->getProduct()->getId();
+        }
+        
+        $arrProduct = $objEM->getRepository('AppBundle:Product')->findAllById($arrProductId);
+        $arrBinNames = array();
+        foreach ($arrProduct as $objProduct) {
+            $arrBinNames[] = $objProduct->getBin()->getName();
+        }
+        
+        $arrRack = $objEM->getRepository('AppBundle:Rack')->findAll();
+        $objOptimumRoute;
+        $targetPackingStation;
+        $intRouteLenght = 0;
+        
+        foreach ($arrRack as $objRack) {
+            $packingStation = json_decode($objRack->getPackingStation(), true);
+            $objPosition = new Position($packingStation['x'], $packingStation['y'], 0);
+            $objRoute = $this->getOptimumRoute($objOriginalMap, $objPosition, $arrBinNames);
+            
+            if(0 == $intRouteLenght || $objRoute->getDistance() < $intRouteLenght) {
+                $intRouteLenght = $objRoute->getDistance();
+                $objOptimumRoute = $objRoute;
+                $targetPackingStation = $packingStation;
+            }
+        }
+        $arrProduct = $this->sortProduct($objOptimumRoute, $arrProduct);
+        $objProduct = new \AppBundle\Entity\Product();
+        $objProduct->setName($targetPackingStation['name']);
+        $arrProduct[] = $objProduct;
+        
+        $arrWarehouseCollection = array();        
         foreach ($objOptimumRoute->getArrPath() as $objPath) {
             $arrWarehouseCollection[] = $this->updateMap($objOriginalMap, $objPath);
         }
         
         return array(
+            'strPackingStationName' => $targetPackingStation['name'],
             'arrWarehouseCollection' => $arrWarehouseCollection,
+            'arrProduct' => $arrProduct,
+            'intTotalDistance' => $objOptimumRoute->getDistance(),
         );
     }
     
@@ -98,7 +133,7 @@ class PurchaseOrderController extends Controller {
         foreach ($objPath->getArrPosition() as $objPosition) {
             $arrNewMap[$objPosition->getX()][$objPosition->getY()] = "*";
         }
-        return $arrNewMap;
+        return array_reverse($arrNewMap);
     }
     
     private function getOptimumRoute($objMap, $objPosition, $arrBinNames) 
@@ -144,12 +179,34 @@ class PurchaseOrderController extends Controller {
         return $objRoute;
     }
     
+    private function sortProduct($objOptimumRoute, $arrProduct) 
+    {
+        $arrPath = $objOptimumRoute->getArrPath();
+        $intProductQuantity = count($arrProduct);
+        
+        unset($arrPath[$intProductQuantity]);
+        
+        for ($i = 0; $i < $intProductQuantity; $i++) {
+            for ($j = $i; $j < $intProductQuantity; $j++) {
+                if ($arrProduct[$j]->getBin()->getName() == $arrPath[$i]->getStrBinName()) {
+                    $objProduct = $arrProduct[$i];
+                    $arrProduct[$i] = $arrProduct[$j];
+                    $arrProduct[$j] = $objProduct;
+                    break;
+                }
+            }
+        }
+        
+        return $arrProduct;
+    }
+
+
     /**
      * Creates a new ProductOrder entity.
      *
      * @Route("/product/add", name="order_product_add")
      * 
-     * @Template("AppBundle:ProductOrder:add.html.twig")
+     * @Template("AppBundle:PurchaseOrder:add.html.twig")
      */
     public function addProductAction(Request $request)
     {
@@ -161,10 +218,11 @@ class PurchaseOrderController extends Controller {
       
         $arrPurchaseList = isset($jsonPurchaseList)? json_decode($jsonPurchaseList, true): array();
         $arrPurchaseProduct = $objEM->getRepository('AppBundle:Product')->findAllById(array_keys($arrPurchaseList));
+        $arrProductChoise = $this->getProductChoise($arrProduct);
         
     	$defaultData = array('message' => 'Product Choose');
     	$form = $this->createFormBuilder($defaultData)
-            ->add('product', 'choice', array('choices' => array($this->getProductChoise($arrProduct)),
+            ->add('product', 'choice', array('choices' => $arrProductChoise,
                 'placeholder' => 'Choose a Product',
                 'empty_data' => null,
             ))
@@ -200,7 +258,7 @@ class PurchaseOrderController extends Controller {
        
     private function getProductChoise($arrProduct) 
     {
-        $arrProductChoise;
+        $arrProductChoise = array();
         foreach ($arrProduct as $objProduct) {
            $arrProductChoise[$objProduct->getId()] = $objProduct->getName(); 
         }
