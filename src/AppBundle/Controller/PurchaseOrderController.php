@@ -252,7 +252,7 @@ class PurchaseOrderController extends Controller {
                 'placeholder' => 'Choose a Product',
                 'empty_data' => null,
             ))
-            ->add('quantity', 'integer', array('data'  => 0, 'empty_data' => 0,))
+            ->add('quantity', 'integer', array('data'  => 1, 'empty_data' => 1,))
             ->add('add', 'submit')
             ->getForm();
 
