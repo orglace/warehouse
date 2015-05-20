@@ -1,11 +1,11 @@
 # This file is a "template" of what your parameters.yml file should look like
 parameters:
     database_driver:   pdo_mysql
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
+    database_host:     us-cdbr-iron-east-02.cleardb.net
+    database_port:     null
+    database_name:     heroku_9149e9241a2c467
+    database_user:     b39acad2dfcd87
+    database_password: 6f5369c7
     # You should uncomment this if you want use pdo_sqlite
     # database_path: "%kernel.root_dir%/data.db3"
 
