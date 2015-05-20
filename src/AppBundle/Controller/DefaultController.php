@@ -16,7 +16,7 @@ class DefaultController extends Controller
     }*/
     
     /**
-     * @Route("/home/page", name="homepage")
+     * @Route("/", name="homepage")
      */
     public function indexAction()
     {
