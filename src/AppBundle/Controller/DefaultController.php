@@ -20,6 +20,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('AppBundle:default:home.html.twig');
+        return $this->redirect($this->generateUrl('warehouse_map'));
     }
 }

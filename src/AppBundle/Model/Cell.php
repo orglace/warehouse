@@ -15,8 +15,8 @@ namespace AppBundle\Model;
  */
 class Cell {
     //put your code here
-    private $strText;
-    private $strClass;
+    public $strText;
+    public $strClass;
     
     function __construct($strText, $strClass) {
         $this->strText = $strText;

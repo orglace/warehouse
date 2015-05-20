@@ -1,0 +1,28 @@
+
+{% block body -%}
+    
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px;">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button" style="margin-top: 10px;">×</button>
+                <h2 class="heading-sm">
+                    <i class="icon-custom rounded-x icon-sm icon-bg-u fa fa-lightbulb-o"></i>
+                    <span>Bin location {{objProductBin.name}}</span>
+                </h2>
+            </div>
+            <div class="modal-body">
+                {% for objProduct in arrProduct %}
+                    <ul style="line-height: 30px;">
+                        <li><strong>Product Name:</strong> {{objProduct.name}}</li>
+                        <li><strong>Product Description:</strong> {{objProduct.description}}</li>
+                        <li><strong>Stock Level:</strong> {{objProduct.stockLevel}}</li>
+                    </ul>  
+                 {% endfor %}
+            </div>
+
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn-u btn-u-default" type="button">Close</button>
+            </div>
+          </div>
+    </div>
+{% endblock %}

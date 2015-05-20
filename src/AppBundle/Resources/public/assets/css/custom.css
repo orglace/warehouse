@@ -1,1 +1,44 @@
 /* Add here all your css styles (customizations) */
+td.bin {
+    background: yellow;
+}
+
+td.bin:hover {
+    cursor: pointer;
+}
+
+td.path {
+    background: url(../img/animated-dot.gif) no-repeat scroll 50% 50%;
+}
+
+td.ps {
+    background-color: purple;
+    color: white;
+}
+
+span.bin {
+    background: yellow;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+span.ps {
+    background-color: purple;
+    color: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+span.wa {
+    color: white;
+    padding: 13px;
+    border: 1px solid #ddd;
+}
+
+span.pt {
+    color: white;
+    padding: 17px;
+    border: 1px solid #ddd;
+    background: url(../img/animated-dot.gif) no-repeat scroll 50% 50%;
+}
+

@@ -25,7 +25,7 @@ class LoadRackData extends AbstractFixture implements OrderedFixtureInterface
         for ($i = 1, $j = 1; $i <= 3; $i++, $j+=3) {
             $objRack = new Rack();
             $objRack->setName("Rack ".$i);
-            $objRack->setPackingStation(json_encode(array('x' => 0, 'y' => $j, 'name' => "Packing Station ".$i)));
+            $objRack->setPackingStation(json_encode(array('x' => 0, 'y' => $j, 'name' => "P".$i)));
             
             $manager->persist($objRack);
             $arrRack[] = $objRack;

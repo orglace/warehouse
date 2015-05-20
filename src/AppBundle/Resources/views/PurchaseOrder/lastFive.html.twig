@@ -1,0 +1,8 @@
+ <ul class="list-unstyled latest-list">
+    {% for objProductOrder in arrProductOrder %}
+    <li>
+        <a href="#">{{ objProductOrder.product.name }} [{{objProductOrder.quantity}}]</a>
+        <small>{{ objProductOrder.purchaseOrder.date | date('M d, Y') }}</small>
+    </li>
+    {% endfor %} 
+</ul>

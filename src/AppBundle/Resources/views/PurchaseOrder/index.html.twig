@@ -1,7 +1,42 @@
 {% extends '::base.html.twig' %}
-
+{% block titlebar -%}Warehouse Map{% endblock %}
 {% block body -%}
-   <h2>Warehouse Map</h2>
-   
-     {{ include('AppBundle:PurchaseOrder:map_details.html.twig') }}
+     
+<div class="row content-boxes-v2 margin-bottom-30">
+        <div class="col-md-7 md-margin-bottom-30"> 
+                        
+            <table class="table table-bordered">
+               <tbody>
+                    {% for row in arrWarehouse %}
+                        <tr>
+                          {% for cell in row %}
+                              <td class="{{ cell.strClass }}" height="50px" width="50px" style="padding: 0; text-align: center; vertical-align: middle;">{{ cell.strText }}</td>                
+                          {% endfor %}
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-md-4 md-margin-bottom-30">
+            
+            <div class="shadow-wrapper margin-bottom-60">
+                <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+                    <h2 class="heading-sm">
+                        <i class="icon-custom rounded-x icon-sm icon-color-u fa fa-lightbulb-o"></i>
+                        <span>Information</span>
+                    </h2>
+                    <ul>
+                        <li style="line-height: 50px;"><span class="bin" style="">A1</span> Bin Location.  </li>
+                        <li style="line-height: 50px;"><span class="ps">P1</span> Packing Station.  </li>
+                        <li style="line-height: 50px;"><span class="wa">Wa</span> Available way to pick a product.  </li>
+                        <li style="line-height: 50px;"><span class="pt">pt</span> Optimum Route to pick a product.  </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+</div>
+        
 {% endblock %}

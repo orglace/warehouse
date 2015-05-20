@@ -6,7 +6,7 @@
                     {% for row in arrWarehouse %}
                         <tr>
                           {% for cell in row %}
-                              <td height="50px" width="50px" style="padding: 0; text-align: center; vertical-align: middle;">{{ cell }}</td>                
+                              <td class="{{ cell.strClass }}" height="50px" width="50px" style="padding: 0; text-align: center; vertical-align: middle;">{{ cell.strText }}</td>                
                           {% endfor %}
                         </tr>
 
@@ -14,7 +14,7 @@
                 </tbody>
             </table>
         </div>
-        
+        {% if objProduct %}
         <div class="col-md-4 md-margin-bottom-30">
             
             <div class="shadow-wrapper margin-bottom-60">
@@ -38,6 +38,6 @@
                 </div>
             </div>
         </div>
-        
+        {% endif %}
 </div>
     

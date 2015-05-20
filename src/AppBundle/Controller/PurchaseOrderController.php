@@ -48,6 +48,10 @@ class PurchaseOrderController extends Controller {
         $objOriginalMap = $this->createMap($objEM);
         $arrWarehouse = $objOriginalMap->getArrWarehouse();
         
+        $arrRack = $objEM->getRepository('AppBundle:Rack')->findAll();
+        
+        $arrWarehouse = $this->updateMap($objOriginalMap, null, $arrRack);
+        
         return array(
             'arrWarehouse' => $arrWarehouse,
         );
@@ -102,7 +106,7 @@ class PurchaseOrderController extends Controller {
         
         $arrWarehouseCollection = array();        
         foreach ($objOptimumRoute->getArrPath() as $objPath) {
-            $arrWarehouseCollection[] = $this->updateMap($objOriginalMap, $objPath);
+            $arrWarehouseCollection[] = $this->updateMap($objOriginalMap, $objPath, $arrRack);
         }
         
         return array(
@@ -127,11 +131,33 @@ class PurchaseOrderController extends Controller {
         return $objOriginalMap;
     }
     
-    private function updateMap(Map $objMap, Path $objPath) {
+    private function updateMap(Map $objMap, $objPath, $arrRack) {
        
+        $intHeight = $objMap->getIntHeight();
+        $intWidth = $objMap->getIntWidth();
         $arrNewMap = $objMap->getArrWarehouse();
-        foreach ($objPath->getArrPosition() as $objPosition) {
-            $arrNewMap[$objPosition->getX()][$objPosition->getY()] = "*";
+        
+        for ($i = 0; $i < $intHeight; $i++) {
+            for ($j = 0; $j < $intWidth; $j++) {
+               $strValue = $arrNewMap[$i][$j];
+               if (" " == $strValue) {
+                   $arrNewMap[$i][$j] = new Cell($strValue, " ");
+               } else {
+                   $arrNewMap[$i][$j] = new Cell($strValue, "bin");
+               }
+            } 
+        }
+        
+        if (isset($objPath))
+            foreach ($objPath->getArrPosition() as $objPosition) {
+                $arrNewMap[$objPosition->getX()][$objPosition->getY()] = new Cell(" ", "path");
+            }
+        
+        foreach ($arrRack as $objRack) {
+            $packingStation = json_decode($objRack->getPackingStation(), true);
+            $objCurrentCell = $arrNewMap[$packingStation['x']][$packingStation['y']];
+            $arrNewMap[$packingStation['x']][$packingStation['y']] = new Cell($packingStation['name'], $objCurrentCell->strClass." ps");
+            
         }
         return array_reverse($arrNewMap);
     }
@@ -305,12 +331,16 @@ class PurchaseOrderController extends Controller {
             $objPurchaseOrder->setUser($objUser);
             $objEM->persist($objPurchaseOrder);
             
+            $arrPurchaseQuantity = array_values($arrPurchaseList);
+            
             foreach ($arrPurchaseProduct as $objProduct) {
                 $objProductOrder = new ProductOrder();
                 $objProductOrder->setProduct($objProduct);
                 $objProductOrder->setPurchaseOrder($objPurchaseOrder);
                 $objProductOrder->setQuantity($arrPurchaseList[$objProduct->getId()]);
                 $objEM->persist($objProductOrder);
+                
+                $objProduct->decreaseStockLevel(intval(array_shift($arrPurchaseQuantity)));
             }
             $objEM->flush();
             $session->set('purchaseList', null);
@@ -335,5 +365,31 @@ class PurchaseOrderController extends Controller {
         return $this->render('AppBundle:PurchaseOrder:list.html.twig', array(
             'arrPurchaseOrder' => $arrPurchaseOrder
         ));
+    }
+    
+    /**
+     * Get the last five sold products.
+     *
+     * @Route("/product/last5", name="order_last_five")
+     * @Method("GET")
+     * @Template()
+     */
+    public function lastFiveAction() {
+       
+        $repository = $this->getDoctrine()->getRepository('AppBundle:PurchaseOrder');
+
+        $query = $repository->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->setParameter('user', '1')
+            ->orderBy('p.date', 'DESC')
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+            ->getQuery();
+
+        $objPurchaseOrder = $query->getSingleResult();
+        
+        return array(
+            'arrProductOrder' => $objPurchaseOrder->getProductOrders(),
+        );
     }
 }

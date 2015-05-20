@@ -16,7 +16,7 @@
     <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
 
     <!-- CSS Global Compulsory -->
-        
+           
     {% block stylesheets %}
     {% stylesheets 
         'bundles/app/assets/plugins/bootstrap/css/bootstrap.min.css'
@@ -73,47 +73,25 @@
             <div class="container">
                 <ul class="nav navbar-nav" style="float:left; margin-left: 200px;">
                     <!-- Home -->
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                            Home
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="index.html">Option 1: Default Page</a></li>
-
-                            <!-- One Page -->
-                            <li class="dropdown-submenu">
-                                <a href="javascript:void(0);">Option 2: One Page</a>
-                                <ul class="dropdown-menu">
-                                    <li><a target="_blank" href="One-Page/index.html">- One Page Template</a></li>                                
-                                    <li><a target="_blank" href="One-Page/dark-page-example.html">- One Page Dark Theme</a></li>                                
-                                </ul>                                
-                            </li>
-                            <!-- End One Page -->
-                        </ul>
+                    <li class="">
+                        <a href="{{ path('warehouse_map') }}">Home</a>
                     </li>
                     <!-- End Home -->
 
                     <!-- Pages -->                        
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                            Pages
+                            Order
                         </a>
                         <ul class="dropdown-menu">
                             <!-- About Pages -->
-                            <li class="dropdown-submenu">
-                                <a href="javascript:void(0);">About Pages</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="page_about2.html">About Us </a></li>
-                                    <li><a href="page_about3.html">About Us 1</a></li>
-                                    <li><a href="page_about1.html">About Us 2</a></li>
-                                    <li><a href="page_about.html">About Us 3</a></li>
-                                    <li><a href="page_about_me.html">About Me </a></li>
-                                    <li><a href="page_about_me1.html">About Me 1</a></li>
-                                    <li><a href="page_about_me2.html">About Me 2</a></li>
-                                    <li><a href="page_about_our_team.html">About Our Team</a></li>
-                                    <li><a href="page_about_our_team1.html">About Our Team 1</a></li>
-                                    <li><a href="page_about_our_team2.html">About Our Team 2</a></li>
-                                </ul>                                
+                            <li>
+                                <a href="{{ path('order_product_add') }}">Create Order</a>
+                                                              
+                            </li>
+                            <li>
+                                <a href="{{ path('order_product_list') }}">Order List</a>
+                                                              
                             </li>
                             <!-- End About Pages -->
                             
@@ -164,20 +142,7 @@
                     <div class="col-md-3 md-margin-bottom-40">
                         <div class="posts">
                             <div class="headline"><h2>Warehouse</h2></div>
-                            <ul class="list-unstyled latest-list">
-                                <li>
-                                    <a href="#">Incredible content</a>
-                                    <small>May 8, 2014</small>
-                                </li>
-                                <li>
-                                    <a href="#">Best shoots</a>
-                                    <small>June 23, 2014</small>
-                                </li>
-                                <li>
-                                    <a href="#">New Terms and Conditions</a>
-                                    <small>September 15, 2014</small>
-                                </li>
-                            </ul>
+                            {{ render(controller('AppBundle:PurchaseOrder:lastFive')) }}
                         </div>
                     </div><!--/col-md-3-->  
                     <!-- End Latest --> 
@@ -216,7 +181,11 @@
         </div><!--/copyright-->
     </div>     
     <!--=== End Footer Version 1 ===-->
-</div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        
+    </div>
+    
 {% block javascripts %}
 {% javascripts
     '@AppBundle/Resources/public/assets/plugins/jquery/jquery.min.js'
@@ -231,7 +200,21 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
       	App.init();
-        });
+        
+     $( "td.bin" ).click(function() {
+        var url = "{{ path('bin_details', { 'name': 'placeHolder' }) }}";
+        url = url.replace('placeHolder', $(this).html());
+        $.ajax({
+            url: url
+          })
+            .done(function( html ) {
+                $('#myModal').html(html);
+                $('#myModal').modal('show');
+           });
+      });   
+    });
+        
+     
 </script>
 {% endblock %}
 

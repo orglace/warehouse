@@ -224,4 +224,8 @@ class Product
     {
         return $this->productOrders;
     }
+    
+    public function decreaseStockLevel($intQuantity) {
+        $this->stockLevel -= $intQuantity;
+    }
 }
