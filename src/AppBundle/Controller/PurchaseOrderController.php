@@ -379,8 +379,8 @@ class PurchaseOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('AppBundle:PurchaseOrder');
 
         $query = $repository->createQueryBuilder('p')
-            ->where('p.user = :user')
-            ->setParameter('user', '1')
+            ->where('p.user != :user')
+            ->setParameter('user', '-1')
             ->orderBy('p.date', 'DESC')
             ->setFirstResult(0)
             ->setMaxResults(1)
