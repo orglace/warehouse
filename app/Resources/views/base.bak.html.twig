@@ -13,22 +13,24 @@
      <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
     <!-- Web Fonts -->
-    
     <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600&amp;subset=cyrillic,latin'>
-   
 
     <!-- CSS Global Compulsory -->
-     {% block stylesheets %}
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/plugins/bootstrap/css/bootstrap.min.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/css/style.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/css/headers/header-default.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/css/footers/footer-v1.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/plugins/animate.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/plugins/line-icons/line-icons.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/plugins/font-awesome/css/font-awesome.min.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/css/theme-colors/default.css')}}'>
-        <link rel='stylesheet' type='text/css' href='{{asset('bundles/app/assets/css/custom.css')}}'>
-    {% endblock %}       
+           
+    {% block stylesheets %}
+    {% stylesheets 
+        'bundles/app/assets/plugins/bootstrap/css/bootstrap.min.css'
+        'bundles/app/assets/css/style.css'
+        'bundles/app/assets/css/headers/header-default.css'
+        'bundles/app/assets/css/footers/footer-v1.css'
+        'bundles/app/assets/plugins/animate.css'
+        'bundles/app/assets/plugins/line-icons/line-icons.css'
+        'bundles/app/assets/plugins/font-awesome/css/font-awesome.min.css'
+        'bundles/app/assets/css/theme-colors/default.css'
+        'bundles/app/assets/css/custom.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% endblock %}
        
     </head>
     
@@ -185,22 +187,21 @@
     </div>
     
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/jquery/jquery-migrate.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/back-to-top.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/smoothScroll.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/js/custom.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/app/assets/js/app.js') }}"></script>
-{% endblock %}
-
+{% javascripts
+    '@AppBundle/Resources/public/assets/plugins/jquery/jquery.min.js'
+    '@AppBundle/Resources/public/assets/plugins/jquery/jquery-migrate.min.js'
+    '@AppBundle/Resources/public/assets/plugins/bootstrap/js/bootstrap.min.js'
+    '@AppBundle/Resources/public/assets/plugins/back-to-top.js'
+    '@AppBundle/Resources/public/assets/plugins/smoothScroll.js'
+    '@AppBundle/Resources/public/assets/js/custom.js'
+    '@AppBundle/Resources/public/assets/js/app.js' %}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
 <script type="text/javascript">
     jQuery(document).ready(function() {
+      	App.init();
         
-     App.init(); 	
-       
      $( "td.bin" ).click(function() {
-         
         var url = "{{ path('bin_details', { 'name': 'placeHolder' }) }}";
         url = url.replace('placeHolder', $(this).html());
         $.ajax({
@@ -210,11 +211,12 @@
                 $('#myModal').html(html);
                 $('#myModal').modal('show');
            });
-      }); 
-      
+      });   
     });
+        
+     
 </script>
-
+{% endblock %}
 
 <!--[if lt IE 9]>
     <script src="assets/plugins/respond.js"></script>
