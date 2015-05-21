@@ -25,7 +25,7 @@ use AppBundle\Model\Position;
 class WarehouseCommand extends ContainerAwareCommand{
     //put your code here
     private $intBinAmount = 10;
-    private $arrBinNames = array("A", "B", "C", "D", "E");
+    private $arrBinNames = array("A", "B", "C", "D", "E", "F");
     private $arrWarehouse;
     private $arrRoad;
     private $intWidth;
@@ -80,8 +80,8 @@ class WarehouseCommand extends ContainerAwareCommand{
         $intHeight = $intBinAmount + 2;
         
         $objOriginalMap = new Map($intWidth, $intHeight, $arrProductBin);
-        $arrBinNames = array("A1", "B1", "C1", "D1", "E1");
-        $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 7, 0), $arrBinNames);
+        $arrBinNames = array("C2", "D2", "D7", "F10", "A9");
+        $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 4, 0), $arrBinNames);
         
         /*$this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
         

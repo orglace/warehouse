@@ -42,3 +42,7 @@ span.pt {
     background: url(../img/animated-dot.gif) no-repeat scroll 50% 50%;
 }
 
+.table tbody tr td {
+    vertical-align: middle;
+}
+

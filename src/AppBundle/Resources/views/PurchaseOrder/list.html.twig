@@ -20,18 +20,21 @@
                     </thead>
                     <tbody>
                         {% for order in arrPurchaseOrder %}
-                        <tr>
+                            <tr>
                             <td>{{ order.id }}</td>
-                            <td>{{ order.date | date('Y-m-d')}}</td>
+                            <td>{{ order.date | date('M d, Y')}}</td>
                             <td>{{ order.user }}</td>
-                            <td><a class="btn btn-u btn-xs" href="{{ path('warehouse_map_route', { 'id': order.id }) }}"><i class="fa fa-magic"></i> Pick Sheet</a></td>
+                            <td style="width:180px;">
+                                <a class="btn btn-u btn-xs" href="{{ path('warehouse_map_route', { 'id': order.id }) }}"><i class="fa fa-magic"> </i> Pick&nbsp;&nbsp;</a>
+                                <a class="btn btn-u btn-u-red btn-xs" href="{{ path('order_delete', { 'id': order.id }) }}"><i class="fa fa-trash-o"></i> Delete</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             <div>
-                <a class="btn-u" href="{{ path('order_product_add') }}"><i class="fa fa-file-text-o"></i> Create new Order</a>
+                <a class="btn-u" href="{{ path('order_product_add') }}"><i class="fa fa-file-text-o"></i> New Order</a>
             </div>
         </div>
         

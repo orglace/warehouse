@@ -36,7 +36,7 @@ class PurchaseOrderController extends Controller {
     //put your code here
     
     /**
-     * Lists all ProductOrder entities.
+     * Show the Warehouse Map.
      *
      * @Route("/warehouse/map", name="warehouse_map")
      * @Method("GET")
@@ -353,7 +353,7 @@ class PurchaseOrderController extends Controller {
         } else {
             $this->addFlash('notice','The order must have 5 product!');
         }
-        return $this->redirect($this->generateUrl('order_product_add'), 302);
+        return $this->redirect($this->generateUrl('order_product_add'));
     }
     
     /**
@@ -370,6 +370,27 @@ class PurchaseOrderController extends Controller {
         return $this->render('AppBundle:PurchaseOrder:list.html.twig', array(
             'arrPurchaseOrder' => $arrPurchaseOrder
         ));
+    }
+    
+    /**
+     * Delete an Order.
+     *
+     * @Route("/{id}/delete", name="order_delete")
+     * @Method("GET")
+     * @Template()
+     */
+    public function deleteAction($id) {
+       
+        $objEM = $this->getDoctrine()->getManager();
+        $objPurchaseOrder = $objEM->getRepository('AppBundle:PurchaseOrder')->find($id);
+        
+        foreach ($objPurchaseOrder->getProductOrders() as $objProductOrder) {
+            $objEM->remove($objProductOrder);
+        }
+        $objEM->remove($objPurchaseOrder);
+        $objEM->flush();
+                
+        return $this->redirect($this->generateUrl('order_product_list'));
     }
     
     /**
@@ -397,4 +418,5 @@ class PurchaseOrderController extends Controller {
             'arrProductOrder' => $objPurchaseOrder->getProductOrders(),
         );
     }
+    
 }
