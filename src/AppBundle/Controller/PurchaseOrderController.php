@@ -36,7 +36,7 @@ class PurchaseOrderController extends Controller {
     //put your code here
     
     /**
-     * Show the Warehouse Map.
+     * Action that show the Warehouse Map.
      *
      * @Route("/warehouse/map", name="warehouse_map")
      * @Method("GET")
@@ -58,7 +58,7 @@ class PurchaseOrderController extends Controller {
     }
     
     /**
-     * Lists all ProductOrder entities.
+     * Action that draw an Order route.
      *
      * @Route("/warehouse/{id}/route", name="warehouse_map_route")
      * @Method("GET")
@@ -117,6 +117,12 @@ class PurchaseOrderController extends Controller {
         );
     }
     
+    /**
+     * Action build and draw a Warehouse Map from Data Base Information
+     * @param type $objEM
+     * @return Map
+     */
+    
     private function createMap($objEM) 
     {
         $arrProductBin = $objEM->getRepository('AppBundle:ProductBin')->findAll();
@@ -130,6 +136,15 @@ class PurchaseOrderController extends Controller {
         $objOriginalMap = new Map($intWidth, $intHeight, $arrProductBin); 
         return $objOriginalMap;
     }
+    
+    /**
+     * Function that update a Warehouse Map with the a path and all the packing stations imformation 
+     * 
+     * @param Map $objMap
+     * @param type $objPath
+     * @param type $arrRack
+     * @return type
+     */
     
     private function updateMap(Map $objMap, $objPath, $arrRack) {
        
@@ -162,6 +177,15 @@ class PurchaseOrderController extends Controller {
         return array_reverse($arrNewMap);
     }
     
+    /**
+     * Function that get the optimum route from a packing station position to a array of bins
+     * 
+     * @param type $objMap
+     * @param type $objPosition
+     * @param type $arrBinNames
+     * @return type
+     */
+    
     private function getOptimumRoute($objMap, $objPosition, $arrBinNames) 
     {   
         $lenght = count($arrBinNames);
@@ -186,6 +210,15 @@ class PurchaseOrderController extends Controller {
         return $objRoute;
     }
     
+    /**
+     * Function that create a route from a packing station position and array of bins
+     * 
+     * @param type $objMap
+     * @param type $objPosition
+     * @param type $arrBinNames
+     * @return MapRoute
+     */
+    
     private function createRoute($objMap, $objPosition, $arrBinNames) {
         
         $lenght = count($arrBinNames);
@@ -204,6 +237,14 @@ class PurchaseOrderController extends Controller {
         $objRoute->addPath($objCurrentPath);
         return $objRoute;
     }
+    
+    /**
+     * Function that order a product array from a pick sheet route
+     * 
+     * @param type $objOptimumRoute
+     * @param type $arrProduct
+     * @return type
+     */
     
     private function sortProduct($objOptimumRoute, $arrProduct) 
     {
@@ -228,7 +269,7 @@ class PurchaseOrderController extends Controller {
 
 
     /**
-     * Creates a new ProductOrder entity.
+     * Action that add a new product to and Purchase Order.
      *
      * @Route("/product/add", name="order_product_add")
      * 
@@ -283,6 +324,13 @@ class PurchaseOrderController extends Controller {
             'form'   => $form->createView(),
         ));
     }
+    
+    /**
+     * Function that create a choise array to a select widget from a product array;
+     * 
+     * @param type $arrProduct
+     * @return type
+     */
        
     private function getProductChoise($arrProduct) 
     {
@@ -294,7 +342,7 @@ class PurchaseOrderController extends Controller {
     }
     
     /**
-     * Delete a product from order list.
+     * Action that delete a product from a Purchase Order.
      *
      * @Route("/product/{id}/delete", name="order_product_delete")
      * 
@@ -315,7 +363,7 @@ class PurchaseOrderController extends Controller {
     }
     
     /**
-     * Process a product order list.
+     * Action that save a Purchase Order.
      *
      * @Route("/product/buy", name="order_product_buy")
      * @Template("AppBundle:ProductOrder:list.html.twig")
@@ -349,7 +397,7 @@ class PurchaseOrderController extends Controller {
             }
             $objEM->flush();
             $session->set('purchaseList', null);
-            return $this->redirect($this->generateUrl('order_product_list'));
+            return $this->redirect($this->generateUrl('order_list'));
         } else {
             $this->addFlash('notice','The order must have 5 product!');
         }
@@ -357,23 +405,24 @@ class PurchaseOrderController extends Controller {
     }
     
     /**
-     * Process a product order list.
+     * Action that list a Purchase Order.
      *
-     * @Route("/product/list", name="order_product_list")
+     * @Route("/product/list", name="order_list")
      * 
      */
-    public function listProductAction(Request $request) 
+    public function listAction(Request $request) 
     {
         $objEM = $this->getDoctrine()->getManager();
         $arrPurchaseOrder = $objEM->getRepository('AppBundle:PurchaseOrder')->findAll();
         
-        return $this->render('AppBundle:PurchaseOrder:list.html.twig', array(
+        $strView = !$request->isXmlHttpRequest()? 'AppBundle:PurchaseOrder:list.html.twig': 'AppBundle:PurchaseOrder:list_template.html.twig';
+        return $this->render($strView, array(
             'arrPurchaseOrder' => $arrPurchaseOrder
         ));
     }
     
     /**
-     * Delete an Order.
+     * Action that delete a Purchase Order.
      *
      * @Route("/{id}/delete", name="order_delete")
      * @Method("GET")
@@ -390,11 +439,11 @@ class PurchaseOrderController extends Controller {
         $objEM->remove($objPurchaseOrder);
         $objEM->flush();
                 
-        return $this->redirect($this->generateUrl('order_product_list'));
+        return $this->redirect($this->generateUrl('order_list'));
     }
     
     /**
-     * Get the last five sold products.
+     * Action that get the last five sold products.
      *
      * @Route("/product/last5", name="order_last_five")
      * @Method("GET")
@@ -418,5 +467,4 @@ class PurchaseOrderController extends Controller {
             'arrProductOrder' => $objPurchaseOrder->getProductOrders(),
         );
     }
-    
 }

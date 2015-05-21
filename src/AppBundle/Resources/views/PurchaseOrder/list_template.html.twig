@@ -1,0 +1,49 @@
+
+
+    <div class="panel panel-sea margin-bottom-40" style="border-color: #72c02c;">
+        <div class="panel-heading" style="background: #72c02c;">
+            <h3 class="panel-title"><i class="glyphicon glyphicon-list"></i> Order Items</h3>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in arrPurchaseOrder %}
+                    <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.date | date('M d, Y')}}</td>
+                    <td>{{ order.user }}</td>
+                    <td style="width:180px;">
+                        <a class="btn btn-u btn-xs" href="{{ path('warehouse_map_route', { 'id': order.id }) }}"><i class="fa fa-magic"> </i> Pick&nbsp;&nbsp;</a>
+                        <a class="btn btn-u btn-u-red btn-xs delete-order" href="{{ path('order_delete', { 'id': order.id }) }}"><i class="fa fa-trash-o"></i> Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <a class="btn-u" href="{{ path('order_product_add') }}"><i class="fa fa-file-text-o"></i> New Order</a>
+    </div>
+
+<script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/jquery/jquery.min.js') }}"></script>
+<script type="text/javascript">
+     
+    $(function() {
+        
+        $('a.delete-order').click(function(){
+            $.ajax({url: this.href})
+            .done(function( data ) {
+                $('#order-container').html(data);
+            });
+            return false;
+        });
+    });
+        
+</script>
