@@ -110,7 +110,7 @@ class PurchaseOrderController extends Controller {
         }
         
         return array(
-            'strPackingStationName' => $targetPackingStation['name'],
+            'strPackingStationName' => $targetPackingStation['fullName'],
             'arrWarehouseCollection' => $arrWarehouseCollection,
             'arrProduct' => $arrProduct,
             'intTotalDistance' => $objOptimumRoute->getDistance(),
@@ -460,11 +460,17 @@ class PurchaseOrderController extends Controller {
             ->setFirstResult(0)
             ->setMaxResults(1)
             ->getQuery();
-
-        $objPurchaseOrder = $query->getSingleResult();
+        
+        $arrProductOrder;
+        try {
+            $objPurchaseOrder = $query->getSingleResult();
+            $arrProductOrder = $objPurchaseOrder->getProductOrders();
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $arrProductOrder = array();
+        }
         
         return array(
-            'arrProductOrder' => $objPurchaseOrder->getProductOrders(),
+            'arrProductOrder' => $arrProductOrder,
         );
     }
 }
