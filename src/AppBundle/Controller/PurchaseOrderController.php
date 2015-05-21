@@ -274,12 +274,14 @@ class PurchaseOrderController extends Controller {
            $session->set('purchaseList', json_encode($arrPurchaseList));
     	}
         
-        return array(
+        $strView = $request->isMethod("GET")? 'AppBundle:PurchaseOrder:add.html.twig': 'AppBundle:PurchaseOrder:add_form.html.twig';
+        
+        return $this->render($strView, array(
             'arrProduct' => $arrPurchaseProduct,
             'arrQuantity' => array_values($arrPurchaseList),
             'addDisabled' => count($arrPurchaseProduct) >= 5? true: false,
             'form'   => $form->createView(),
-        );
+        ));
     }
        
     private function getProductChoise($arrProduct) 
