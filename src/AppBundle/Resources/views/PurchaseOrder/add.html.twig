@@ -41,19 +41,3 @@
     
 
 {% endblock %}
-{% block javascripts %}
-    {{parent()}}   
-    <script type="text/javascript">
-     $(function() {
-        $('.form-inline').submit(function(){
-           
-            $.post( form.action, $('.form-inline').serialize())
-            .done(function( data ) {
-                $('#form-container').html(data);
-            });
-            return false;
-        });
-    });
-        
-    </script>
- {% endblock %}

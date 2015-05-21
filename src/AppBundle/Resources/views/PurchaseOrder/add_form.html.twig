@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
     {% form_theme form 'bootstrap_3_layout.html.twig' %}
 
     {% for flashMessage in app.session.flashbag.get('notice') %}
@@ -49,7 +49,7 @@
                     <td>{{ product.name }}</td>
                     <td>{{ product.description }}</td>
                     <td>{{ arrQuantity[loop.index0] }}</td>
-                    <td> <a class="btn btn-danger btn-xs" href="{{ path('order_product_delete', { 'id': product.id }) }}"><i class="fa fa-trash-o"></i> delete</a> </td>
+                    <td> <a class="btn btn-danger btn-xs delete-product" href="{{ path('order_product_delete', { 'id': product.id }) }}"><i class="fa fa-trash-o"></i> delete</a> </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -58,13 +58,22 @@
     <div>
         <a class="btn-u" href="{{ path('order_product_buy') }}"><i class="fa fa-shopping-cart"></i> Buy</a>
     </div>
-
-{% block javascripts %}
-    <script type="text/javascript">
-     $(function() {
+    
+<script type="text/javascript" src="{{ asset('bundles/app/assets/plugins/jquery/jquery.min.js') }}"></script>
+<script type="text/javascript">
+     
+    $(function() {
         $('.form-inline').submit(function(){
-           
-            $.post( form.action, $('.form-inline').serialize())
+            
+            $.post( $(this).action, $(this).serialize())
+            .done(function( data ) {
+                $('#form-container').html(data);
+            });
+            return false;
+        });
+        
+        $('a.delete-product').click(function(){
+            $.ajax({method: "POST", url: this.href})
             .done(function( data ) {
                 $('#form-container').html(data);
             });
@@ -72,5 +81,4 @@
         });
     });
         
-    </script>
- {% endblock %}
+</script>

@@ -274,7 +274,7 @@ class PurchaseOrderController extends Controller {
            $session->set('purchaseList', json_encode($arrPurchaseList));
     	}
         
-        $strView = $request->isMethod("GET")? 'AppBundle:PurchaseOrder:add.html.twig': 'AppBundle:PurchaseOrder:add_form.html.twig';
+        $strView = ($request->isMethod("GET") && !$request->isXmlHttpRequest())? 'AppBundle:PurchaseOrder:add.html.twig': 'AppBundle:PurchaseOrder:add_form.html.twig';
         
         return $this->render($strView, array(
             'arrProduct' => $arrPurchaseProduct,
@@ -307,6 +307,9 @@ class PurchaseOrderController extends Controller {
         $arrPurchaseList = isset($jsonPurchaseList)? json_decode($jsonPurchaseList, true): array();
         unset($arrPurchaseList[$id]);
         $session->set('purchaseList', json_encode($arrPurchaseList));
+        
+        $this->addFlash('redirect', true);
+        
         
         return $this->redirect($this->generateUrl('order_product_add'));
     }
@@ -350,7 +353,7 @@ class PurchaseOrderController extends Controller {
         } else {
             $this->addFlash('notice','The order must have 5 product!');
         }
-        return $this->redirect($this->generateUrl('order_product_add'));
+        return $this->redirect($this->generateUrl('order_product_add'), 302);
     }
     
     /**
