@@ -1,0 +1,90 @@
+{# empty Twig template #}
+
+{% extends '::base.html.twig' %}
+{% block titlebar -%}Solution Annotation{% endblock %}
+{% block body -%}
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="thumbnails thumbnail-style thumbnail-kenburn">
+                <div class="thumbnail-img">
+                    <div class="overflow-hidden">
+                        <img class="img-responsive" src="{{asset('bundles/app/assets/img/annotation_01.jpg')}}" alt="">
+                    </div>
+                    <a class="btn-more hover-effect" href="{{asset('bundles/app/assets/img/annotation_01.jpg')}}">view more +</a>                   
+                </div>
+                <div class="caption">
+                    <h3><a class="hover-effect" href="#">Algorithm & Definitions</a></h3>
+                    <p>Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key') and explores the neighbor nodes first, before moving to the next level neighbors... </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="thumbnails thumbnail-style thumbnail-kenburn">
+                <div class="thumbnail-img">
+                    <div class="overflow-hidden">
+                        <img class="img-responsive" src="{{asset('bundles/app/assets/img/annotation_02.jpg')}}" alt="">
+                    </div>
+                    <a class="btn-more hover-effect" href="{{asset('bundles/app/assets/img/annotation_02.jpg')}}">view more +</a>                   
+                </div>
+                <div class="caption">
+                    <h3><a class="hover-effect" href="#">Calculating the Best Route</a></h3>
+                    <p>The Best Route is the more short route to pick some products in the product bins inside the warehouse. In this use case the picker will get 5 product. 
+                        But the solution work with any quantity. So you can get the better route creating all the possible routes and choosing the more shorter...
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="thumbnails thumbnail-style thumbnail-kenburn">
+                <div class="thumbnail-img">
+                    <div class="overflow-hidden">
+                        <img class="img-responsive" src="{{asset('bundles/app/assets/img/annotation_03.jpg')}}" alt="">
+                    </div>
+                    <a class="btn-more hover-effect" href="{{asset('bundles/app/assets/img/annotation_03.jpg')}}">view more +</a>                   
+                </div>
+                <div class="caption">
+                    <h3><a class="hover-effect" href="#">Database</a></h3>
+                    <p>This program define some entities as you can see in the annotations above to save the information you'll handle in Database.
+                       You can see some interpretation of the principal entities that compose the model of the solution... </p>
+                </div>
+            </div>
+        </div>
+    </div>
+                    
+    <div class="modal fade bs-example-modal-lg" id="annotation-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h2 class="heading-sm">
+                        <i class="icon-custom rounded icon-bg-dark fa fa-bullhorn"></i> 
+                        <span>Annotation</span>
+                    </h2>
+                </div>
+                <div class="modal-body" id="annotation-content">
+                    <img id="annotation-image" src="" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block javascripts %}    
+    {{parent()}}
+    <script type="text/javascript">
+        $(function(){
+            
+            $("a.btn-more").click(function() {
+         
+                /*$.ajax({url: this.href})
+                .done(function( html ) {
+                    $('#annotation-image').attr('src', this.href);
+                    $('#annotation-modal').modal('show');
+               });*/
+                    $('#annotation-image').attr('src', this.href);
+                    $('#annotation-modal').modal('show');
+                return false;
+          });
+        });
+    </script>
+    {% endblock %}
+{% endblock %}
