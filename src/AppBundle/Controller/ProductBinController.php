@@ -28,7 +28,7 @@ class ProductBinController extends Controller {
     //put your code here
     
     /**
-     * Lists all ProductOrder entities.
+     * Action get details of a bin location.
      *
      * @Route("/{name}", name="bin_details")
      * @Method("GET")

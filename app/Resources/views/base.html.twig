@@ -76,13 +76,13 @@
                     </li>
                     <!-- End Home -->
 
-                    <!-- Pages -->                        
+                    <!-- Order -->                        
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                             Order
                         </a>
                         <ul class="dropdown-menu">
-                            <!-- About Pages -->
+                            <!-- Order Actions -->
                             <li>
                                 <a href="{{ path('order_product_add') }}">Create Order</a>
                                                               
@@ -91,11 +91,17 @@
                                 <a href="{{ path('order_list') }}">Order List</a>
                                                               
                             </li>
-                            <!-- End About Pages -->
+                            <!-- End Order Actions -->
                             
                         </ul>
                     </li>
-                    <!-- End Pages -->
+                    <!-- End Order -->
+                    
+                    <!-- Annotations -->
+                    <li class="">
+                        <a href="{{ path('exercise_annotations') }}">Annotations</a>
+                    </li>
+                    <!-- End Annotations -->
                 </ul>
             </div><!--/end container-->
         </div><!--/navbar-collapse-->
