@@ -35,6 +35,9 @@ use AppBundle\Model\Cell;
 class PurchaseOrderController extends Controller {
     //put your code here
     
+    private $intBestDistance = -1;
+    private $objBestRoute;
+    
     /**
      * Action that show the Warehouse Map.
      *
@@ -91,7 +94,8 @@ class PurchaseOrderController extends Controller {
         foreach ($arrRack as $objRack) {
             $packingStation = json_decode($objRack->getPackingStation(), true);
             $objPosition = new Position($packingStation['x'], $packingStation['y'], 0);
-            $objRoute = $this->getOptimumRoute($objOriginalMap, $objPosition, $arrBinNames);
+            $objRoute = $this->getOptimumRoute($objOriginalMap, $objPosition, $arrBinNames, count($arrBinNames));
+            $objRoute = $this->objBestRoute;
             
             if(0 == $intRouteLenght || $objRoute->getDistance() < $intRouteLenght) {
                 $intRouteLenght = $objRoute->getDistance();
@@ -179,6 +183,41 @@ class PurchaseOrderController extends Controller {
     
     /**
      * Function that get the optimum route from a packing station position to a array of bins
+     * to optain the optimum route was used Heap's algorithm(generating all possible permutations of some given length)
+     * 
+     * @param type $objMap
+     * @param type $objPosition
+     * @param type $arrBinNames
+     * @return type
+     */
+    private function getOptimumRoute($objMap, $objPosition, $arrBinNames, $intLength) 
+    {   
+        if (1 == $intLength) {
+            $objCurrentRoute = $this->createRoute($objMap, $objPosition, $arrBinNames);
+            $intCurrentDistance = $objCurrentRoute->getDistance();
+            if (-1 == $this->intBestDistance || $this->intBestDistance > $intCurrentDistance) {
+                $this->intBestDistance = $intCurrentDistance;
+                $this->objBestRoute = $objCurrentRoute;
+            }
+        } else {
+            for ($i = 0; $i < $intLength; $i++) {
+                $this->getOptimumRoute($objMap, $objPosition, $arrBinNames, $intLength - 1);
+                if (0 != $intLength%2) {
+                    $intValue = $arrBinNames[$i];
+                    $arrBinNames[$i] = $arrBinNames[$intLength - 1];
+                    $arrBinNames[$intLength - 1] = $intValue;
+                } else {
+                    
+                    $intValue = $arrBinNames[0];
+                    $arrBinNames[0] = $arrBinNames[$intLength - 1];
+                    $arrBinNames[$intLength - 1] = $intValue;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Function that get the optimum route from a packing station position to a array of bins
      * 
      * @param type $objMap
      * @param type $objPosition
@@ -186,7 +225,7 @@ class PurchaseOrderController extends Controller {
      * @return type
      */
     
-    private function getOptimumRoute($objMap, $objPosition, $arrBinNames) 
+   /* private function getOptimumRoute($objMap, $objPosition, $arrBinNames) 
     {   
         $lenght = count($arrBinNames);
         $intDistance;
@@ -208,7 +247,7 @@ class PurchaseOrderController extends Controller {
         }
         
         return $objRoute;
-    }
+    }*/
     
     /**
      * Function that create a route from a packing station position and array of bins

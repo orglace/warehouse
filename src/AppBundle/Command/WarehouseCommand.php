@@ -31,7 +31,10 @@ class WarehouseCommand extends ContainerAwareCommand{
     private $intWidth;
     private $intHeight;
     
-        
+    private $intBestDistance = -1;
+    private $objBestRoute;
+
+
     protected function configure()
     {
         $this
@@ -70,6 +73,10 @@ class WarehouseCommand extends ContainerAwareCommand{
         
         $output->writeln("The better distance is: ".$distance);*/
         
+        
+        
+        
+        
         $objEM = $this->getContainer()->get('doctrine')->getManager();
         $arrProductBin = $objEM->getRepository('AppBundle:ProductBin')->findAll();
         $arrRack = $objEM->getRepository('AppBundle:Rack')->findAll();
@@ -80,22 +87,26 @@ class WarehouseCommand extends ContainerAwareCommand{
         $intHeight = $intBinAmount + 2;
         
         $objOriginalMap = new Map($intWidth, $intHeight, $arrProductBin);
-        $arrBinNames = array("C2", "D2", "D7", "F10", "A9");
-        $objOptimumRoute = $this->getOptimumRoute($objOriginalMap, new Position(0, 4, 0), $arrBinNames);
+        $arrBinNames = array("B3", "B1", "E1", "E3", "F1");
+        $this->getOptimumRoute($objOriginalMap, new Position(0, 7, 0), $arrBinNames, 5);
         
-        /*$this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
+        //$this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
         
-        $output->writeln("The better distance is: ".$intDistance);
-        $this->printPath($objPath, $output);*/
+        //$output->writeln("The better distance is: ".$intDistance);
+        //$this->printPath($objPath, $output);
         
         //$this->printMap($objOriginalMap->getArrWarehouse(), $output);
         //$output->writeln("The better distance is: ".$objOptimumRoute->getDistance());
-        foreach ($objOptimumRoute->getArrPath() as $objPath) {
+        foreach ($this->objBestRoute->getArrPath() as $objPath) {
             $this->printMap($this->updateMap($objOriginalMap, $objPath), $output);
             $this->printPath($objOriginalMap, $objPath, $output);
         }
         
-        $output->writeln("The better route has a distance of: ".$objOptimumRoute->getDistance());
+        $output->writeln("The better route has a distance of: ".$this->objBestRoute->getDistance());
+        
+        
+        
+        
         
         /*$objPurchase = array(14 => 10, 25 => 2);
         $jsonPurchase = json_encode($objPurchase);
@@ -116,6 +127,7 @@ class WarehouseCommand extends ContainerAwareCommand{
         //$output->writeln("The x value is: ".$objPositionFromJson.getX());
         $intValue = intval("25");
         dump($intValue);*/
+        //$this->permutation(4, array("A", "B", "C", "D"), $output);
     }
     
     private function updateMap(Map $objMap, Path $objPath) {
@@ -142,28 +154,37 @@ class WarehouseCommand extends ContainerAwareCommand{
         $output->writeln('Product Bin: '.$objPath->getStrBinName());
     }
     
-    private function getOptimumRoute($objMap, $objPosition, $arrBinNames) 
+    /**
+     * Function get the optimum route using Heap's algorithm(generating all possible permutations of some given length)
+     * @param type $objMap
+     * @param type $objPosition
+     * @param type $arrBinNames
+     * @return type
+     */
+    private function getOptimumRoute($objMap, $objPosition, $arrBinNames, $intLength) 
     {   
-        $lenght = count($arrBinNames);
-        $intDistance;
-        $objRoute = new Route($objMap);
-        
-        for ($i = 0; $i < $lenght; $i++) {
-            for ($j = 0; $j < $lenght-1; $j++) {
-                $objCurrentRoute = $this->createRoute($objMap, $objPosition, $arrBinNames);
-                $intCurrentDistance = $objCurrentRoute->getDistance();
-                //dump($intCurrentDistance);
-                if (!isset($intDistance) || $intDistance > $intCurrentDistance) {
-                    $intDistance = $intCurrentDistance;
-                    $objRoute = $objCurrentRoute;
+        if (1 == $intLength) {
+            $objCurrentRoute = $this->createRoute($objMap, $objPosition, $arrBinNames);
+            $intCurrentDistance = $objCurrentRoute->getDistance();
+            if (-1 == $this->intBestDistance || $this->intBestDistance > $intCurrentDistance) {
+                $this->intBestDistance = $intCurrentDistance;
+                $this->objBestRoute = $objCurrentRoute;
+            }
+        } else {
+            for ($i = 0; $i < $intLength; $i++) {
+                $this->getOptimumRoute($objMap, $objPosition, $arrBinNames, $intLength - 1);
+                if (0 != $intLength%2) {
+                    $intValue = $arrBinNames[$i];
+                    $arrBinNames[$i] = $arrBinNames[$intLength - 1];
+                    $arrBinNames[$intLength - 1] = $intValue;
+                } else {
+                    
+                    $intValue = $arrBinNames[0];
+                    $arrBinNames[0] = $arrBinNames[$intLength - 1];
+                    $arrBinNames[$intLength - 1] = $intValue;
                 }
-                $strBinNamePivot = $arrBinNames[$j];
-                $arrBinNames[$j] = $arrBinNames[$j+1];
-                $arrBinNames[$j+1] = $strBinNamePivot;
             }
         }
-        
-        return $objRoute;
     }
     
     private function createRoute($objMap, $objPosition, $arrBinNames) {
@@ -185,6 +206,27 @@ class WarehouseCommand extends ContainerAwareCommand{
         return $objRoute;
     }
     
+    private function permutation ($intN, $arrBin, $output) {
+        
+        if (1 == $intN) {
+            $output->write($arrBin);
+            $output->writeln(" ");
+        } else {
+            for ($i = 0; $i < $intN; $i++) {
+                $this->permutation($intN - 1, $arrBin, $output);
+                if (0 != $intN%2) {
+                    $intValue = $arrBin[$i];
+                    $arrBin[$i] = $arrBin[$intN - 1];
+                    $arrBin[$intN - 1] = $intValue;
+                } else {
+                    
+                    $intValue = $arrBin[0];
+                    $arrBin[0] = $arrBin[$intN - 1];
+                    $arrBin[$intN - 1] = $intValue;
+                }
+            }
+        }
+    }
     /*protected function initWarehouse() 
     {
         $intBinNamesCount = count($this->arrBinNames);
