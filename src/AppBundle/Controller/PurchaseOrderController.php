@@ -511,5 +511,5 @@ class PurchaseOrderController extends Controller {
         return array(
             'arrProductOrder' => $arrProductOrder,
         );
-    }
+    }     
 }

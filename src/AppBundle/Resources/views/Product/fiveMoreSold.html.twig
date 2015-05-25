@@ -1,0 +1,8 @@
+ <ul class="list-unstyled latest-list">
+    {% for objProduct in arrProduct %}
+    <li>
+        <a href="#">{{ objProduct['name'] }} -- stock [{{objProduct['stockLevel']}}]</a>
+        <small> Sold: <strong style="color: white;">{{ objProduct['quantity'] }}</strong></small>
+    </li>
+    {% endfor %} 
+</ul>

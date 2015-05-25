@@ -30,4 +30,18 @@ class ProductRepository extends EntityRepository
         return $products;
     }
     //put your code here
+    
+    public function fiveMoreSold() {
+        
+        $objEM = $this->getEntityManager();
+        
+        $query = $objEM->createQuery(
+            "SELECT p.name as name, sum(po.quantity) AS quantity, p.stockLevel 
+             FROM AppBundle:ProductOrder po JOIN po.product p 
+             GROUP BY p.id 
+             ORDER BY quantity DESC"
+        )->setMaxResults(5);
+
+        return $query->getResult();
+    }
 }
