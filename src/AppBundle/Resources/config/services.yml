@@ -1,0 +1,11 @@
+parameters:
+#    backend_client.example.class: GR\BackendClientBundle\Example
+    app_warehouse.map.class: AppBundle\Service\WarehouseMap
+
+services:
+#    backend_client.example:
+#        class: %backend_client.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    app_warehouse.map:
+        class: %app_warehouse.map.class%
+        arguments: [@doctrine]

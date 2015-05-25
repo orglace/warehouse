@@ -3,7 +3,7 @@
 {% block body -%}
     <h3>Optimum Route (Distance: {{ intTotalDistance }} meters)</h3>
     {% for arrWarehouse in arrWarehouseCollection %}
-           {{ include('AppBundle:PurchaseOrder:map_details.html.twig', { 'arrWarehouse': arrWarehouse, 'objProduct': arrProduct[loop.index0]}) }}
+           {{ include('AppBundle:Warehouse:map_details.html.twig', { 'arrWarehouse': arrWarehouse, 'objProduct': arrProduct[loop.index0]}) }}
            <br>
            <br>
     {% endfor %}    
