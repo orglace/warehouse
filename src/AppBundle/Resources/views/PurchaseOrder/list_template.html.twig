@@ -40,10 +40,18 @@
         $('a.delete-order').click(function(){
             $.ajax({url: this.href})
             .done(function( data ) {
+                updateBestSellers();
                 $('#order-container').html(data);
             });
             return false;
         });
     });
+    
+    function updateBestSellers() {
+       $.ajax({url: "{{ path('product_five_more_sold') }}"})
+        .done(function( data ) {
+            $('#best-sellers').html(data);
+        }); 
+    }
         
 </script>

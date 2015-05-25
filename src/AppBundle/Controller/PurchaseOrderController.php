@@ -82,6 +82,7 @@ class PurchaseOrderController extends Controller {
            $session->set('purchaseList', json_encode($arrPurchaseList));
     	}
         
+        ksort($arrPurchaseList);
         $strView = ($request->isMethod("GET") && !$request->isXmlHttpRequest())? 'AppBundle:PurchaseOrder:add.html.twig': 'AppBundle:PurchaseOrder:add_form.html.twig';
         
         return $this->render($strView, array(
@@ -144,6 +145,8 @@ class PurchaseOrderController extends Controller {
 
         if(count($arrPurchaseList) == 5) {
             $objEM = $this->getDoctrine()->getManager();
+            
+            ksort($arrPurchaseList);
             $arrPurchaseProduct = $objEM->getRepository('AppBundle:Product')->findAllById(array_keys($arrPurchaseList));
             $objUser = $objEM->getRepository('AppBundle:User')->findOneByUsername("admin");
             
@@ -201,6 +204,10 @@ class PurchaseOrderController extends Controller {
         $objPurchaseOrder = $objEM->getRepository('AppBundle:PurchaseOrder')->find($id);
         
         foreach ($objPurchaseOrder->getProductOrders() as $objProductOrder) {
+            $intQuantity = $objProductOrder->getQuantity();
+            $objProduct = $objProductOrder->getProduct();
+            $objProduct->setStockLevel($objProduct->getStockLevel() + $intQuantity);
+            
             $objEM->remove($objProductOrder);
         }
         $objEM->remove($objPurchaseOrder);
